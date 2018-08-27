@@ -31,4 +31,15 @@ server.listen(SERVER_PORT, () => {
 
 serverSocket.on('connection', (socket) => {
     console.log('An user has connected');
+
+
+    socket.on('newMessage', (msg) => {
+        console.log('New Message: ', msg);
+        serverSocket.emit('newMessage', msg);
+    });
+
+
+    socket.on('disconnect', () => {
+        console.log('An user has disconnected');
+    });
 });

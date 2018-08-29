@@ -56,14 +56,15 @@ serverSocket.on('connection', (socket) => {
         });
 
         // Tell everyone else that a new user joined the server.
-        socket.broadcast.emit('userConnected', {
-            username
-        });
+        socket.broadcast.emit('userConnected', { username });
     });
 
 
     socket.on('disconnect', () => {
         // Remove the user from the connectedUsers array.
         connectedUsers.splice(connectedUsers.findIndex((user) => user === username), 1);
+
+        // Broadcast the event of the user leaving.
+        socket.broadcast.emit('userDisconnected', { username });
     });
 });

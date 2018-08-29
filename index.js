@@ -36,7 +36,7 @@ const connectedUsers = [];
 serverSocket.on('connection', (socket) => {
     socket.on('sendMessage', (msg) => {
         serverSocket.emit('newMessage', {
-            user: 'Annatsu',
+            user: socket.username,
             body: msg
         });
     });

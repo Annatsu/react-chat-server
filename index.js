@@ -31,7 +31,7 @@ server.listen(SERVER_PORT, () => {
 
 
 // Configures the Socket.io data and data flow.
-const connectedUsers = [];
+let connectedUsers = [];
 
 serverSocket.on('connection', (socket) => {
     socket.on('sendMessage', (msg) => {
@@ -48,7 +48,7 @@ serverSocket.on('connection', (socket) => {
 
         // Set the socket username.
         socket.username = username;
-        connectedUsers.push(username);
+        connectedUsers = connectedUsers.concat(username);
 
         // Emit a login event so the user can enter the chat.
         socket.emit('login', {
@@ -68,7 +68,7 @@ serverSocket.on('connection', (socket) => {
             return;
 
         // Remove the user from the connectedUsers array.
-        connectedUsers.splice(connectedUsers.findIndex((user) => user === username), 1);
+        connectedUsers = connectedUsers.filter((user) => user !== username);
 
         // Broadcast the event of the user leaving.
         socket.broadcast.emit('userDisconnected', { username });

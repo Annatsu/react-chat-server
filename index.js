@@ -29,17 +29,41 @@ server.listen(SERVER_PORT, () => {
 });
 
 
+
+// Configures the Socket.io data and data flow.
+const connectedUsers = [];
+
 serverSocket.on('connection', (socket) => {
-    console.log('An user has connected');
+    socket.on('sendMessage', (msg) => {
+        serverSocket.emit('newMessage', {
+            user: 'Annatsu',
+            body: msg
+        });
+    });
 
 
-    socket.on('newMessage', (msg) => {
-        console.log('New Message: ', msg);
-        serverSocket.emit('newMessage', msg);
+    socket.on('newUser', (username) => {
+        if (connectedUsers.includes(username))
+            return socket.emit('invalidUsername', username);
+
+        // Set the socket username.
+        socket.username = username;
+        connectedUsers.push(username);
+
+        // Emit a login event so the user can enter the chat.
+        socket.emit('login', {
+            users: connectedUsers
+        });
+
+        // Tell everyone else that a new user joined the server.
+        socket.broadcast.emit('userConnected', {
+            username
+        });
     });
 
 
     socket.on('disconnect', () => {
-        console.log('An user has disconnected');
+        // Remove the user from the connectedUsers array.
+        connectedUsers.splice(connectedUsers.findIndex((user) => user === username), 1);
     });
 });

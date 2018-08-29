@@ -61,6 +61,8 @@ serverSocket.on('connection', (socket) => {
 
 
     socket.on('disconnect', () => {
+        const { username } = socket;
+
         // Remove the user from the connectedUsers array.
         connectedUsers.splice(connectedUsers.findIndex((user) => user === username), 1);
 

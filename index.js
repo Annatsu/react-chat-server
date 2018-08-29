@@ -44,7 +44,7 @@ serverSocket.on('connection', (socket) => {
 
     socket.on('newUser', (username) => {
         if (connectedUsers.includes(username))
-            return socket.emit('invalidUsername', username);
+            return socket.emit('invalidUsername', { username });
 
         // Set the socket username.
         socket.username = username;
